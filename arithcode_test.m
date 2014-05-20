@@ -1,6 +1,6 @@
 function arithcode_test(file_name)
 load(file_name);    
-Diff = Hdd{2}.GAMMA.diff;
+Diff = Hdd{2}.GAMMA.Diff;
 % figure();hist(diff);
 % simple diff
 % Diff   = [1 3 - 4 -4 -5 2 2]

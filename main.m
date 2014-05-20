@@ -30,13 +30,13 @@ bins = 2^8;
     save('HddSamp.mat','Hdd');
     arithcode_test('HddSamp.mat');
 %% Entropy Encoding
-[Apd,Hdd,Vdd,Ddd] = DiffCodeCells(Apq,Hdq,Vdq,Ddq,level); 
-% Verefication and test
-    save('HddSamp.mat','Hdd');
-    arithcode_test('HddSamp.mat');
-%% Write file
+[Ape,Hde,Vde,Dde] = EntropyEncodeCells(Apd,Hdd,Vdd,Ddd,level); 
 
-%% Performence Estimatino
+%% Write file
+params.
+
+%% Performence Estimation
+
 %% Read  file
 
 %% Decoding

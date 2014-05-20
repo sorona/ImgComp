@@ -3,6 +3,7 @@ function [ A, GAMMA ] = QuantizeCell( C,bins )
     % Quantize encode GAMMA
     OrignalSize = size(C.GAMMA); 
     GAMMAv = Gamma2vec(C.GAMMA);
+    GAMMAv = GAMMAv';
     DC     = mean(GAMMAv);
     GAMMAv = GAMMAv-DC;
     Max    = max(abs(GAMMAv));
@@ -20,6 +21,7 @@ function [ A, GAMMA ] = QuantizeCell( C,bins )
     % Quantize encode A
     OrignalSize = size(C.A);
     Av          = Gamma2vec(C.A); % TODO: replace with A2vec
+    AV          = Av';
     DC          = mean(Av);
     Av          = Av-DC;
     Max         = max(abs(Av));

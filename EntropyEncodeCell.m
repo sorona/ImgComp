@@ -20,7 +20,11 @@ function [ Ce ] = EntropyEncodeCell( Cd )
     counts = counts(1:t-1);
     trans  = trans(1:t-1);
     len    = length(seq);
-    Ecode  = arithenco(seq,counts) ;
+    if(length(counts)>1) 
+        Ecode = arithenco(seq,counts);
+    elseif(length(counts)==1)
+        Ecode = 0;
+    end
     
     Epar.counts = counts;
     Epar.trans  = trans;
@@ -49,8 +53,12 @@ function [ Ce ] = EntropyEncodeCell( Cd )
     end
     counts = counts(1:t-1);
     trans  = trans(1:t-1);
-    len    = length(seq);
-    Ecode  = arithenco(seq,counts) ;
+    len    = length(seq); 
+    if(length(counts)>1) 
+        Ecode = arithenco(seq,counts);
+    elseif(length(counts)==1)
+        Ecode = 0;
+    end
     
     Epar.counts = counts;
     Epar.trans  = trans;

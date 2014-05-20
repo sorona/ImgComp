@@ -7,8 +7,9 @@ Im= imread('lenna.gif');
 level   = 3; 
 wavelet_name = 'db4'; %sym8 db4
 dwtmode('per')
-
 [C,S] = wavedec2(Im,level,wavelet_name);
+Wpar.level = level;
+Wpar.wavelet_name = wavelet_name;
 % figure(); showwave2( C,S,level,wavelet_name )
 [Ap,H,V,D] = getCoefCel( C,S,level,wavelet_name);
 
@@ -31,9 +32,11 @@ bins = 2^8;
     arithcode_test('HddSamp.mat');
 %% Entropy Encoding
 [Ape,Hde,Vde,Dde] = EntropyEncodeCells(Apd,Hdd,Vdd,Ddd,level); 
-
+% Verefication and test
+    save('HdeSamp.mat','Hde','Wpar');
+     filewrite_test('HdeSamp.mat');    
 %% Write file
-params.
+
 
 %% Performence Estimation
 
@@ -50,7 +53,7 @@ Arec = Ap;
 C_r = getWaveletStream(Arec,Hrec,Vrec,Drec);
 
 Im_rec = waverec2(C_r,S,wavelet_name);
-imshow(Im_rec,[]);
+figure();imshow(Im_rec,[]);
 
 
 

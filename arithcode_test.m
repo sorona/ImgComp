@@ -4,6 +4,8 @@ Diff = Hdd{2}.GAMMA.Diff;
 % figure();hist(diff);
 % simple diff
 % Diff   = [1 3 - 4 -4 -5 2 2]
+% zeros case
+% Diff   = [0 0 0 0 0 0 0]
 
 % encode 
 Min    = min(Diff);
@@ -25,19 +27,29 @@ counts = counts(1:t-1);
 trans  = trans(1:t-1);
 len    = length(seq);
 
-Ecode = arithenco(seq,counts) ;
+if(length(counts)>1) 
+    Ecode = arithenco(seq,counts);
+elseif(length(counts)==1)
+    Ecode = 0;
+end
 % compression rate rought estimation
 % for 8 bit quantization
 rate = length(Ecode)/(8*length(seq));
-fprintf('arithcode compression rate rough estimation for 8 bit on Hdd2 %.3f\n',rate);
+fprintf('arithcode test compression rate rough estimation for 8 bit on Hdd2 %.3f\n',rate);
 %TODO: make estimation depndend on bins
 
 % decode
 Diffr = zeros(1,len);
-Dseq = arithdeco(Ecode,counts,len);
-for i=1:length(trans)
-   ind = Dseq==i;
-   Diffr(ind) = trans(i);
+if(length(counts)>1)
+        Dseq = arithdeco(Ecode,counts,len);
+    for i=1:length(trans)
+       ind = Dseq==i;
+       Diffr(ind) = trans(i);
+    end
+elseif(length(counts)==1)
+    Diffr(1:end)=trans(1)';
 end
- isequal(Diffr',Diff)
+ res = isequal(Diffr,Diff);
+ fprintf('arithenco/deco test isequal=%d\n',res);
+ 
 end

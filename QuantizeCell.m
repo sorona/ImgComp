@@ -1,10 +1,10 @@
 function [ A, GAMMA ] = QuantizeCell( C,bins )
     
     % Quantize encode GAMMA
-    OrignalSize = size(C.GAMMA); 
+    OriginalSize = size(C.GAMMA); 
     GAMMAv = Gamma2vec(C.GAMMA);
     GAMMAv = GAMMAv';
-    DC     = mean(GAMMAv);
+    DC     = mean(full(GAMMAv));
     GAMMAv = GAMMAv-DC;
     Max    = max(abs(GAMMAv));
     % encode
@@ -12,17 +12,17 @@ function [ A, GAMMA ] = QuantizeCell( C,bins )
     codebook =  (-bins/2:1:bins/2-1);
     [index,~] = quantiz(GAMMAv,partition,codebook);
     % save parameters
-    Qpar.OrignalSize = OrignalSize;
+    Qpar.OriginalSize = OriginalSize;
     Qpar.DC          = DC;
     Qpar.Max         = Max;
     GAMMA.Qindex     = index;
     GAMMA.Qpar       = Qpar;
 
     % Quantize encode A
-    OrignalSize = size(C.A);
+    OriginalSize = size(C.A);
     Av          = Gamma2vec(C.A); % TODO: replace with A2vec
     AV          = Av';
-    DC          = mean(Av);
+    DC          = mean(full(Av));
     Av          = Av-DC;
     Max         = max(abs(Av));
     % encode
@@ -30,7 +30,7 @@ function [ A, GAMMA ] = QuantizeCell( C,bins )
     codebook =  (-bins/2:1:bins/2-1);
     [index,~] = quantiz(Av,partition,codebook);
     % save parameters
-    Qpar.OrignalSize = OrignalSize;
+    Qpar.OriginalSize = OriginalSize;
     Qpar.DC          = DC;
     Qpar.Max         = Max;
     A.Qindex         = index;

@@ -21,11 +21,11 @@ function err = quantize_test(bins,file_name)
     GAMMA = Hd2.GAMMA;
 
 %     figure;imshow(full(A))
-%     figure;imshow(full(GAMMA))
+     figure;imshow(full(GAMMA))
 
     par.Size   = size(GAMMA); 
     GAMMAv = Gamma2vec(GAMMA);
-    DC     = mean(GAMMAv);
+    DC     = mean(full(GAMMAv));
     GAMMAv = GAMMAv-DC;
     Max    = max(abs(GAMMAv));
 

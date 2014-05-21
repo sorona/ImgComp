@@ -5,11 +5,13 @@ Im= imread('lenna.gif');
 
 %% Wavelet Transform
 level   = 3; 
-wavelet_name = 'db4'; %sym8 db4
-dwtmode('per')
+wavelet_cell = {'db4','sym8'};
+wavelet_num  = 1;
+wavelet_name = wavelet_cell{wavelet_num};
+dwtmode('per') 
 [C,S] = wavedec2(Im,level,wavelet_name);
 Wpar.level = level;
-Wpar.wavelet_name = wavelet_name;
+Wpar.wavelet_num = wavelet_name;
 % figure(); showwave2( C,S,level,wavelet_name )
 [Ap,H,V,D] = getCoefCel( C,S,level,wavelet_name);
 
@@ -20,7 +22,7 @@ Patch_size = 64;
     save('HdSamp.mat','Hd');
     quantization_test('HdSamp.mat');
 %% Quantization encoding
-bins = 2^8; 
+bins = 2^8; % TODO-> convert to Qbit in all functions
 [Apq,Hdq,Vdq,Ddq] = QuantizeCells(Ap,Hd,Vd,Dd,level,bins);
 % Verefication and test    
     save('HdqSamp.mat','Hdq');

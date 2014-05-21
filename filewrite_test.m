@@ -1,47 +1,34 @@
 function filewrite_test(file_name)
-    load(file_name)
-    test_file_name = 'test_write';
+    w = load(file_name);
 
-    stream = [ 1 0 1 0 1 1 1 1 0 0 0 0 1];
-    len    = length(stream);
-    pad    = len-floor(len)/8;
-    stream = [stream , zeros(1,pad)];
+    test_file_name = 'test_write';
     
-%     pad    = 
     
-%     Hde  
-%     Wpar 
-    H    = Hde{1}.GAMMA;
-    Qpar = H.Qpar;
+    Spar.counts = [1 2 21 ];
+    Spar.len    = 213212;
+    Spar.header.field = {'counts','len'};
+    Spar.header.len   = {length(Spar.counts),length(Spar.len)};
+    Spar.header.type  = {'uint16','uint16'};
     
-    Gamma.header.fields      = {'Ecode'};
-    Gamma.header.type        = {'stream'};
-    Gamma.header.len         = {-1};
-    Gamma.Ecode.stream       = [1 0 1 0 1 0];
-    Gamaa.Ecode.len          = length(Gamma.Ecode.stream.stream); 
-    Gamma.Ecode.pad          = 
-%     Gamma.Qpar.OriginalSize = [64 1024];
-%     Gamam.Qpar.DC           = 1232.4422;
-    
-    % write
-    fid =fopen(test_file_name,'w');
-%     fwrite(fid,Wpar.level,'uint8');
-    
-%     fwrite(fid,H.Qpar.OriginalSize,'uint32');
-%     fwrite(fid,H.Qpar.DC,'double');
-%     fwrite(fid,H.Qpar.Max,'double');
-    
-    filesize = ftell(fid);
-    
+    fid    = fopen('test_write','w');
+    % write struct parameters 
+    field = Spar.header.field;  
+    len   = Spar.header.len;
+    type  = Spar.header.type;
+    for i=1:length(Spar.header.field)
+        fwrite(fid,len{i},'uint16');
+        fwrite(fid,eval(sprintf('Spar.%s',field{i})),type{i});
+    end
+    filesize = ftell(fid)
     fclose(fid);
-    % file size    
-    fprintf('write_test file size %d Bytes\n',filesize);
-   
-    % read
-    fid   = fopen(test_file_name,'r');
-%     level = fread(fid,1,'uint8'); isequal(level,Wpar.level)
-%     OriginalSize = fread(fid,size(Qpar.OriginalSize),'uint32'); isequal(OriginalSize,Qpar.OriginalSize)
     
+    Spar2.header.field = Spar2.header.field; 
+    % read struct
+    fid   = fopen('test_write','r');
+    for i=1:length(Spar.header.field)
+        Spar.headerlenfread(fid,len{i},'uint16');
+        fwrite(fid,eval(sprintf('Spar.%s',field{i})),type{i});
+    end
+    pad    = fread(fid,1,'uint8');
     
-    fclose(fid);
 end

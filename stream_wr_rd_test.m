@@ -23,13 +23,16 @@ function stream_wr_rd_test()
         streamU8 = reshape(stream,[],8);
         streamU8 = bi2de(streamU8);
         len      = length(streamU8);
-        fwrite(fid,len,     'uint16'); 
+        fwrite(fid,len,     'uint32');
+        if(len>=2^32)
+             error('ERR write_stream2file "len" overflows uint32'); 
+        end
         fwrite(fid,pad,     'uint8' );
         fwrite(fid,streamU8,'uint8' );
     end
      %% read bit stream from file func
     function stream = read_streamfile(fid)
-        len    = fread(fid,1,'uint16'); 
+        len    = fread(fid,1,'uint32'); 
         pad    = fread(fid,1,'uint8');
         streamU8 = fread(fid,len,'uint8');
         stream = de2bi(streamU8,8);

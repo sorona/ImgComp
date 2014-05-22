@@ -5,11 +5,15 @@ function filewrite_test(file_name)
     Spar.counts = [1;2;21 ];                        % vector (must be nx1)
     Spar.len    = 213212;                           % number
     Spar.stream = randsrc(1,12,[1 0 ;0.5 0.5]);    % bit stream
+    Spar.strct.header.field  = {'Innercount','InnerNo'};
+    Spar.strct.header.type    = {'uint16','uint16'};
+    Spar.strct.Innercount = [12 ; 23 ; 123];
+    Spar.strct.InnerNo    = 2;
     Spar.lewew  = [321; 213 ; 123221];              % vector (must be nx1)
 %     Spar.bad    = zeros(2^16,1);                  % to much long vector of parameters
     Spar.bad      = zeros(2^15,1);                  
-    Spar.header.field = {'counts','len','lewew','stream','bad'};
-    Spar.header.type  = {'uint16','uint32','uint32','stream','uint16'};
+    Spar.header.field = {'counts','len','lewew','stream','strct','bad'};
+    Spar.header.type  = {'uint16','uint32','uint32','stream','struct','uint16'};
     
     fid    = fopen('test_write','w');
     write_struct2file(fid,Spar);
@@ -18,7 +22,8 @@ function filewrite_test(file_name)
     
     Spar2.header.field = Spar.header.field; 
     Spar2.header.type  = Spar.header.type;
-%     Spar2.header.len   = cell(1,length(Spar.header.field));
+    Spar2.strct.header.field = Spar.strct.header.field; 
+    Spar2.strct.header.type  = Spar.strct.header.type;
     
     fid   = fopen('test_write','r');
     Spar2 = read_structfromfile(fid,Spar2);
@@ -38,6 +43,11 @@ function filewrite_test(file_name)
                     fwrite(fid,2^32-1,'uint32')
                     stream = eval(sprintf('Spar.%s',field{i}));
                     write_stream2file (stream,fid);
+                case 'struct'
+                    % writing len (s^32-2) resereved for stream
+                    fwrite(fid,2^32-2,'uint32')
+                    struct = eval(sprintf('Spar.%s',field{i}));
+                    write_struct2file(fid,struct);
                 otherwise 
                     % writing len before header (implicit)
                     fwrite(fid,eval(sprintf('length(Spar.%s)',field{i})),'uint32');
@@ -61,9 +71,15 @@ function filewrite_test(file_name)
         for i=1:field_no
             len{i} = fread(fid,1,'uint32');
             switch len{i}
+                % stream
                 case 2^32-1 % len that symbols stream
                     stream = read_streamfile(fid);
-                    eval(sprintf('SparRe.%s=stream',field{i}));
+                    eval(sprintf('SparRe.%s=stream;',field{i}));
+                % struct
+                case 2^32-2
+                    InnerSpar = eval(sprintf('Spar.%s',field{i}));
+                    InnerSpar = read_structfromfile(fid,InnerSpar);
+                    eval(sprintf('SparRe.%s=InnerSpar',field{i}))
                 otherwise
                 eval(sprintf('SparRe.%s=fread(fid,len{%d},type{%d});',field{i},i,i)); 
             end

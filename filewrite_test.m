@@ -11,10 +11,10 @@ function filewrite_test(file_name)
     Spar.lewew  = [321; 213 ; 123221];              % vector (must be nx1)
     H1=Spar.strct;
     H2=Spar.strct;
-    Spar.cel    = {H1,H2};
+    Spar.cel2    = {H1,H2};
 %     Spar.bad    = zeros(2^32,1);                  % to much long vector of parameters
     Spar.bad      = zeros(2^10-3,1);                  
-    Spar.header.field = {'counts','len','lewew','stream','strct','cel','bad'};
+    Spar.header.field = {'counts','len','lewew','stream','strct','cel2','bad'};
     Spar.header.type  = {'uint16','uint32','uint32','stream','struct','cell','uint16'};
     
     fid    = fopen('test_write','w');
@@ -22,10 +22,12 @@ function filewrite_test(file_name)
 %     filesize = ftell(fid)
     fclose(fid);
     
-    Spar2.header.field = Spar.header.field; 
-    Spar2.header.type  = Spar.header.type;
-    Spar2.strct.header.field = Spar.strct.header.field; 
-    Spar2.strct.header.type  = Spar.strct.header.type;
+    Spar2.header = Spar.header; 
+%     Spar2.header.type  = Spar.header.type;
+    Spar2.cel2{1}.header = Spar.cel2{1}.header;
+    Spar2.cel2{2}.header = Spar.cel2{2}.header;
+%     Spar2.strct.header.field = Spar.strct.header.field; 
+    Spar2.strct.header  = Spar.strct.header;
     
     fid   = fopen('test_write','r');
     Spar2 = read_structfromfile(fid,Spar2);
@@ -41,21 +43,34 @@ function filewrite_test(file_name)
         for i=1:length(Spar.header.field)
             switch type{i}
                 case 'stream'
-                    % writing len (s^32-1) resereved for stream
+                    % writing len (2^32-1) resereved for stream
                     fwrite(fid,2^32-1,'uint32');
                     stream = eval(sprintf('Spar.%s;',field{i}));
                     write_stream2file (stream,fid);
                 case 'struct'
-                    % writing len (s^32-2) resereved for stream
+                    % writing len (2^32-2) resereved for stream
                     fwrite(fid,2^32-2,'uint32');
                     struct = eval(sprintf('Spar.%s;',field{i}));
                     write_struct2file(fid,struct);
+                case 'cell'
+                    % writing len (2^32-3) reserved for cell
+                    fwrite(fid,2^32-3,'uint32');
+                    cell_len = eval(sprintf('length(Spar.%s);',field{i}));
+%                         % check overflow strc_len
+%                         if(cell_len>=2^8)
+%                             error('ERR write"strc_len" overflows');
+%                         end
+%                     fwrite(fid,cell_len,'uint8');
+                    for j=1:cell_len
+                        tmp_struct = eval(sprintf('Spar.%s{%d};',field{i},j));
+                        write_struct2file(fid,tmp_struct);
+                    end
                 otherwise 
                     % writing len before header (implicit)
                     fwrite(fid,eval(sprintf('length(Spar.%s)',field{i})),'uint32');
-                        % make sure len is not overflowing uint32 
-                        if(eval(sprintf('length(Spar.%s)',field{i}))>=2^32-2) 
-                            error('ERR write_struct2file "len" overflows uint32...(also: 2^32-1 2^32-2 are reserved)'); 
+                        % check len overflow uint32 
+                        if(eval(sprintf('length(Spar.%s)',field{i}))>=2^32-3) 
+                            error('ERR write_struct2file "len" overflows uint32...(also: 2^32-1 2^32-2 2^32-3 are reserved)'); 
                         end;
                     % wrtiring params   
                     fwrite(fid,eval(sprintf('Spar.%s',field{i})),type{i});
@@ -82,6 +97,15 @@ function filewrite_test(file_name)
                     InnerSpar = eval(sprintf('Spar.%s;',field{i}));
                     InnerSpar = read_structfromfile(fid,InnerSpar);
                     eval(sprintf('SparRe.%s=InnerSpar;',field{i}))
+                % cell
+                case 2^32-3
+                    cell_len = eval(sprintf('length(Spar.%s);',field{i}));
+                    tmp_cell = cell(1,cell_len);
+                    for j=1:cell_len
+                        Inner_cell = eval(sprintf('Spar.%s{%d};',field{i},j));
+                        tmp_cell{j}= read_structfromfile(fid,Inner_cell);
+                    end
+                    eval(sprintf('SparRe.%s=tmp_cell;',field{i}));
                 otherwise
                 eval(sprintf('SparRe.%s=fread(fid,len{%d},type{%d});',field{i},i,i)); 
             end

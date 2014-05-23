@@ -5,7 +5,10 @@ function filewrite_test(file_name)
     Spar.counts = [1;2;21 ];                        % vector (must be nx1)
     Spar.len    = 213212;                           % number
     Spar.stream = randsrc(1,12,[1 0 ;0.5 0.5]);    % bit stream
-    Spar.strct  = Spar;
+    Spar.strct.header.field  = {'Innercount','InnerNo'};
+    Spar.strct.header.type    = {'uint16','uint16'};
+    Spar.strct.Innercount = [12 ; 23 ; 123];
+    Spar.strct.InnerNo    = 2;
     Spar.lewew  = [321; 213 ; 123221];              % vector (must be nx1)
 %     Spar.bad    = zeros(2^16,1);                  % to much long vector of parameters
     Spar.bad      = zeros(2^15,1);                  
@@ -19,8 +22,8 @@ function filewrite_test(file_name)
     
     Spar2.header.field = Spar.header.field; 
     Spar2.header.type  = Spar.header.type;
-    Spar2.strct.header.field = Spar.header.field; 
-    Spar2.strct.header.type  = Spar.header.type;
+    Spar2.strct.header.field = Spar.strct.header.field; 
+    Spar2.strct.header.type  = Spar.strct.header.type;
     
     fid   = fopen('test_write','r');
     Spar2 = read_structfromfile(fid,Spar2);
@@ -71,12 +74,12 @@ function filewrite_test(file_name)
                 % stream
                 case 2^32-1 % len that symbols stream
                     stream = read_streamfile(fid);
-                    eval(sprintf('SparRe.%s=stream',field{i}));
+                    eval(sprintf('SparRe.%s=stream;',field{i}));
                 % struct
                 case 2^32-2
                     InnerSpar = eval(sprintf('Spar.%s',field{i}));
-                    SparRe = read_structfromfile(fid,InnerSpar);
-                    eval(sprintf('Spar.%s=Spa',field{i}))
+                    InnerSpar = read_structfromfile(fid,InnerSpar);
+                    eval(sprintf('SparRe.%s=InnerSpar',field{i}))
                 otherwise
                 eval(sprintf('SparRe.%s=fread(fid,len{%d},type{%d});',field{i},i,i)); 
             end

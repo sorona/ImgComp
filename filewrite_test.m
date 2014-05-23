@@ -23,10 +23,8 @@ function filewrite_test(file_name)
     fclose(fid);
     
     Spar2.header = Spar.header; 
-%     Spar2.header.type  = Spar.header.type;
     Spar2.cel2{1}.header = Spar.cel2{1}.header;
     Spar2.cel2{2}.header = Spar.cel2{2}.header;
-%     Spar2.strct.header.field = Spar.strct.header.field; 
     Spar2.strct.header  = Spar.strct.header;
     
     fid   = fopen('test_write','r');
@@ -56,11 +54,6 @@ function filewrite_test(file_name)
                     % writing len (2^32-3) reserved for cell
                     fwrite(fid,2^32-3,'uint32');
                     cell_len = eval(sprintf('length(Spar.%s);',field{i}));
-%                         % check overflow strc_len
-%                         if(cell_len>=2^8)
-%                             error('ERR write"strc_len" overflows');
-%                         end
-%                     fwrite(fid,cell_len,'uint8');
                     for j=1:cell_len
                         tmp_struct = eval(sprintf('Spar.%s{%d};',field{i},j));
                         write_struct2file(fid,tmp_struct);

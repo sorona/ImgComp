@@ -41,10 +41,12 @@ bins = 2^8; % TODO-> convert to Qbits in all functions?
     save('HdeSamp.mat','Hde','Wpar');
      filewrite_test('HdeSamp.mat');    
 %% Write file
-    Coeff.Ape=Ape;
+%     Coeff.Ape=Ape;
     Coeff.Hde=Hde;
     Coeff.Dde=Dde; 
     Coeff.Vde=Vde;
+    Coeff.header.field = {'Hde','Dde','Vde'};
+    Coeff.header.type  = {'cell','cell','cell'};
     PackedParam.Coeff = Coeff;
     PackedParam.Wpar  = Wpar; 
     filename = 'CompImg';

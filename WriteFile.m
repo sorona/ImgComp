@@ -5,6 +5,7 @@ function WriteFile(PackedParam,filename)
     
     fid    = fopen(filename,'w');
     write_struct2file(fid,Wpar);
+    write_struct2file(fid,Coeff);
     filesize = ftell(fid)
     fclose(fid);
     
@@ -15,28 +16,36 @@ end
 function PackedParam = ReadFile(filename)
     fid = fopen(filename,'r');
 end
-%% write complex struct
+%% write complex struct 
 function write_struct2file(fid,Spar)
     field = Spar.header.field;  
     type  = Spar.header.type;
     for i=1:length(Spar.header.field)
         switch type{i}
             case 'stream'
-                % writing len (s^32-1) resereved for stream
-                fwrite(fid,2^32-1,'uint32')
-                stream = eval(sprintf('Spar.%s',field{i}));
+                % writing len (2^32-1) resereved for stream
+                fwrite(fid,2^32-1,'uint32');
+                stream = eval(sprintf('Spar.%s;',field{i}));
                 write_stream2file (stream,fid);
             case 'struct'
-                % writing len (s^32-2) resereved for stream
-                fwrite(fid,2^32-2,'uint32')
-                struct = eval(sprintf('Spar.%s',field{i}));
+                % writing len (2^32-2) resereved for stream
+                fwrite(fid,2^32-2,'uint32');
+                struct = eval(sprintf('Spar.%s;',field{i}));
                 write_struct2file(fid,struct);
+            case 'cell'
+                % writing len (2^32-3) reserved for cell
+                fwrite(fid,2^32-3,'uint32');
+                cell_len = eval(sprintf('length(Spar.%s);',field{i}));
+                for j=1:cell_len
+                    tmp_struct = eval(sprintf('Spar.%s{%d};',field{i},j));
+                    write_struct2file(fid,tmp_struct);
+                end
             otherwise 
                 % writing len before header (implicit)
                 fwrite(fid,eval(sprintf('length(Spar.%s)',field{i})),'uint32');
-                    % make sure len is not overflowing uint32 
-                    if(eval(sprintf('length(Spar.%s)',field{i}))>=2^32-2) 
-                        error('ERR write_struct2file "len" overflows uint32...(also: 2^32-1 2^32-2 are reserved)'); 
+                    % check len overflow uint32 
+                    if(eval(sprintf('length(Spar.%s)',field{i}))>=2^32-3) 
+                        error('ERR write_struct2file "len" overflows uint32...(also: 2^32-1 2^32-2 2^32-3 are reserved)'); 
                     end;
                 % wrtiring params   
                 fwrite(fid,eval(sprintf('Spar.%s',field{i})),type{i});
@@ -60,9 +69,18 @@ function SparRe = read_structfromfile(fid,Spar)
                 eval(sprintf('SparRe.%s=stream;',field{i}));
             % struct
             case 2^32-2
-                InnerSpar = eval(sprintf('Spar.%s',field{i}));
+                InnerSpar = eval(sprintf('Spar.%s;',field{i}));
                 InnerSpar = read_structfromfile(fid,InnerSpar);
-                eval(sprintf('SparRe.%s=InnerSpar',field{i}))
+                eval(sprintf('SparRe.%s=InnerSpar;',field{i}))
+            % cell
+            case 2^32-3
+                cell_len = eval(sprintf('length(Spar.%s);',field{i}));
+                tmp_cell = cell(1,cell_len);
+                for j=1:cell_len
+                    Inner_cell = eval(sprintf('Spar.%s{%d};',field{i},j));
+                    tmp_cell{j}= read_structfromfile(fid,Inner_cell);
+                end
+                eval(sprintf('SparRe.%s=tmp_cell;',field{i}));
             otherwise
             eval(sprintf('SparRe.%s=fread(fid,len{%d},type{%d});',field{i},i,i)); 
         end

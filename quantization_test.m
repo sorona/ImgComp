@@ -33,7 +33,8 @@ function err = quantize_test(bins,file_name)
     partition = ((-bins/2:1:bins/2-2)+0.5)/(bins/2)*Max;
     codebook =  (-bins/2:1:bins/2-1);
     [index,~] = quantiz(GAMMAv,partition,codebook);
-
+    index = index';
+    
     % decode
     codebook = (-bins/2:1:bins/2-1);
     quant    = (codebook(index+1));

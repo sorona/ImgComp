@@ -76,5 +76,8 @@ function [ Ce ] = EntropyEncodeCell( Cd )
     Ce.A.Dpar  = Cd.A.Dpar;
     Ce.A.header.field = {'Ecode','Epar','Qpar','Dpar'};
     Ce.A.header.type  = {'stream','struct','struct','struct'};
+    
+    Ce.header.field = {'GAMMA','A'};
+    Ce.header.type  = {'struct','struct'};
 end
 

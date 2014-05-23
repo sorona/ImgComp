@@ -17,7 +17,7 @@ function [ A, GAMMA ] = QuantizeCell( C,bins )
     Qpar.Max          = Max;
     Qpar.header.field = {'OriginalSize','DC','Max'};
     Qpar.header.type  = {'uint16','double','double'};%TODO: check DC/Max double/signel float...
-    GAMMA.Qindex      = index;
+    GAMMA.Qindex      = index';
     GAMMA.Qpar        = Qpar;
 
     % Quantize encode A
@@ -37,7 +37,7 @@ function [ A, GAMMA ] = QuantizeCell( C,bins )
     Qpar.Max         = Max;
     Qpar.header.field = {'OriginalSize','DC','Max'};
     Qpar.header.type  = {'uint16','double','double'};%TODO: check DC/Max double/signel float...
-    A.Qindex         = index;
+    A.Qindex         = index';
     A.Qpar           = Qpar;
     
 end

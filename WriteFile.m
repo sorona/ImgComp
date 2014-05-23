@@ -15,6 +15,41 @@ end
 
 function PackedParam = ReadFile(filename)
     fid = fopen(filename,'r');
+    
+    Wpar.header.field = {'level','wavelet_num'};
+    Wpar.header.type  = {'uint8','uint8'};
+    Wpar = read_structfromfile(fid,Wpar);
+    
+    Qpar.header.field = {'OriginalSize','DC','Max'};
+    Qpar.header.type  = {'uint16','double','double'};
+    Epar.header.field = {'counts','trans','len'}; 
+    Epar.header.type  = {'uint32','int64','uint32'};
+    Dpar.header.field={'start_index'};
+    Dpar.header.type ={'uint64'};
+
+    base_struct.Qpar = Qpar;
+    base_struct.Epar = Epar;
+    base_struct.Dpar = Dpar;
+    base_struct.header.field   = {'Ecode','Epar','Qpar','Dpar'};
+    base_struct.header.type  = {'stream','struct','struct','struct'};
+    
+    Coeff.header.field = {'Hde','Dde','Vde'};
+    Coeff.header.type  = {'cell','cell','cell'};
+    for i=1:3
+        for j=1:Wpar.level
+            A     = base_struct;
+            GAMMA = base_struct;
+            Outer.A = A;
+            Outer.GAMMA = GAMMA;
+            Outer.header.field = {'GAMMA','A'};
+            Outer.header.type  = {'struct','struct'};
+            eval(sprintf('Coeff.%s{%d}=Outer;',Coeff.header.field{i},j));
+        end
+    end
+    
+    Coeff = read_structfromfile(fid,Coeff);
+    PackedParam.Wpar = Wpar;
+    PackedParam.Coeff = Coeff;
 end
 %% write complex struct 
 function write_struct2file(fid,Spar)

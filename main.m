@@ -55,6 +55,8 @@ bins = 2^8; % TODO-> convert to Qbits in all functions?
 %% Performence Estimation
 
 %% Read  file
+%     clear all; %TODO: remove
+    filename = 'CompImg'; 
     PackedParamR = ReadFile(filename); 
     WparR        = PackedParamR.Wpar;
     CoeffR       = PackedParamR.Coeff;
@@ -73,7 +75,6 @@ bins = 2^8; % TODO-> convert to Qbits in all functions?
 %% Quantization Decoding
 % bins  = % TODO (move write and read from file)
 [Ap,Hd,Vd,Dd] = QuantizeDecodeCells(Apq,Hdq,Vdq,Ddq,level,bins);
-
 
 %% Wavelet Reconstruction
  

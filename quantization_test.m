@@ -23,7 +23,7 @@ function err = quantize_test(bins,file_name)
 %     figure;imshow(full(A))
 %      figure;imshow(full(GAMMA))
 
-    par.Size   = size(GAMMA); 
+    Size   = size(GAMMA); 
     GAMMAv = Gamma2vec(GAMMA);
     DC     = mean(full(GAMMAv));
     GAMMAv = GAMMAv-DC;
@@ -39,7 +39,7 @@ function err = quantize_test(bins,file_name)
     codebook = (-bins/2:1:bins/2-1);
     quant    = (codebook(index+1));
     Gr       = quant/(bins/2)*Max+DC;
-    GAMMAr   = vec2GAMMA(Gr,par);
+    GAMMAr   = vec2GAMMA(Gr,Size);
     
     err = norm(GAMMAr-GAMMA,'fro')/norm(GAMMA,'fro');
 end

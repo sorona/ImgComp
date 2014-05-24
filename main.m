@@ -30,7 +30,7 @@ bins = 2^8; % TODO-> convert to Qbits in all functions?
 % Verefication and test    
     save('HdqSamp.mat','Hdq');
     diff_test('HdqSamp.mat');
-%% Difference Coding
+%% Difference Encoding
 [Apd,Hdd,Vdd,Ddd] = DiffCodeCells(Apq,Hdq,Vdq,Ddq,level); 
 % Verefication and test
     save('HddSamp.mat','Hdd');
@@ -50,22 +50,39 @@ bins = 2^8; % TODO-> convert to Qbits in all functions?
     PackedParam.Coeff = Coeff;
     PackedParam.Wpar  = Wpar; 
     filename = 'CompImg';
-    WriteFile(PackedParam,filename);
+    file_size = WriteFile(PackedParam,filename);
 
 %% Performence Estimation
 
 %% Read  file
+    PackedParamR = ReadFile(filename); 
+    WparR        = PackedParamR.Wpar;
+    CoeffR       = PackedParamR.Coeff;
+    Hde = CoeffR.Hde;
+    Dde = CoeffR.Dde; 
+    Vde = CoeffR.Vde;
+    
+    level = WparR.level;
+    wavelet_num = WparR.wavelet_num;
+%% Entropy Decoding
+[Apd,Hdd,Vdd,Ddd] = EntropyDecodeCells(Ape,Hde,Vde,Dde,level); 
+    
+%% Difference Decoding
+[Apq,Hdq,Vdq,Ddq] = DiffDecodeCells(Apd,Hdd,Vdd,Ddd,level); 
 
-%% Decoding
+%% Quantization Decoding
+% bins  = % TODO (move write and read from file)
+[Ap,Hd,Vd,Dd] = QuantizeDecodeCells(Apq,Hdq,Vdq,Ddq,level,bins);
 
 
-%% Reconstruction
+%% Wavelet Reconstruction
  
 Arec = Ap;
 [Hrec,Vrec,Drec] = sparseToCoef(Hd,Vd,Dd,level);
 
 C_r = getWaveletStream(Arec,Hrec,Vrec,Drec);
-
+wavelet_cell = {'db4','sym8'};
+wavelet_name = wavelet_cell{wavelet_num};
 Im_rec = waverec2(C_r,S,wavelet_name);
 figure();imshow(Im_rec,[]);
 

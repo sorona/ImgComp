@@ -1,4 +1,4 @@
-function arithcode_test(file_name)
+function arithcode_test(file_name,bins)
 load(file_name);    
 Diff = Hdd{2}.GAMMA.Diff;
 % figure();hist(diff);
@@ -33,10 +33,9 @@ elseif(length(counts)==1)
     Ecode = 0;
 end
 % compression rate rought estimation
-% for 8 bit quantization
-rate = length(Ecode)/(8*length(seq));
-fprintf('arithcode test compression rate rough estimation for 8 bit on Hdd2 %.3f\n',rate);
-%TODO: make estimation depndend on bins and quantization
+rate = length(Ecode)/(log2(bins)*length(seq));
+fprintf('compression rate estimation is only for comparison between methods\n')
+fprintf('arithcode test compression rate of GAMMA.Diff rough estimation for %d bits on Hdd2 %.3f\n',log2(bins),rate);
 %% encode ver2 (coeff asade) 
  ind = 1:1:length(Diff);
  nonZind = Diff ~= 0;
@@ -68,7 +67,7 @@ elseif(length(counts2)==1)
     Ecode2 = 0;
 end
 rate2 = (length(Ecode2)+length(nonZind)*16)/(8*length(seq));
-fprintf('arithcode test ver2 compression rate rough estimation for 8 bit on Hdd2 %.3f\n',rate2);
+fprintf('arithcode test ver2 compression rate of GAMMA rough estimation for %d bits on Hdd2 %.3f\n',log2(bins),rate2);
 
 
 %% decode

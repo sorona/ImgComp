@@ -1,5 +1,5 @@
 function [Ap,Hd,Vd,Dd] = QuantizeDecodeCells(Apq,Hdq,Vdq,Ddq,level,bins)
-    Ap = Apq; % TODO: implement quantize Ap 
+    Ap = QuantizeDecodeApq(Apq,bins); % TODO: implement quantize Ap 
     Hd = cell(1,level);
     Vd = cell(1,level);
     Dd = cell(1,level);

@@ -18,9 +18,10 @@ function PackedParam = ReadFile(filename)
     base_struct.header.field   = {'Ecode','Epar','Qpar','Dpar'};
     base_struct.header.type  = {'stream','struct','struct','struct'};
     
-    Coeff.header.field = {'Hde','Dde','Vde'};
-    Coeff.header.type  = {'cell','cell','cell'};
-    for i=1:3
+    Coeff.header.field = {'Ape','Hde','Dde','Vde'};
+    Coeff.header.type  = {'struct','cell','cell','cell'};
+    Coeff.Ape = base_struct;
+    for i=2:4
         for j=1:Wpar.level
             A     = base_struct;
             GAMMA = base_struct;

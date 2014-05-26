@@ -1,5 +1,5 @@
 function [Ape,Hde,Vde,Dde] = EntropyEncodeCells(Apd,Hdd,Vdd,Ddd,level)
-    Ape = Apd; % TODO: implement diff Ap 
+    Ape = EntropyEncodeApd(Apd); % TODO: implement entroy encode Ap, do test to check if needed ??
     Hde = cell(1,level);
     Vde = cell(1,level);
     Dde = cell(1,level);

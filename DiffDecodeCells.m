@@ -1,5 +1,5 @@
 function [Apq,Hdq,Vdq,Ddq] = DiffDecodeCells(Apd,Hdd,Vdd,Ddd,level)
-    Apq = Apd; % TODO: implement diff Ap 
+    Apq = DiffDecodeApd(Apd); % TODO: implement diff Ap 
     Hdq = cell(1,level);
     Vdq = cell(1,level);
     Ddq = cell(1,level);

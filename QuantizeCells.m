@@ -1,6 +1,6 @@
 function [Apq,Hdq,Vdq,Ddq] = QuantizeCells( Ap,Hd,Vd,Dd,level,bins )
     
-    Apq = Ap; % TODO: implement quantize Ap 
+    Apq = QuantizeAp(Ap,bins); % TODO: implement quantize Ap 
     Hdq = cell(1,level);
     Vdq = cell(1,level);
     Ddq = cell(1,level);

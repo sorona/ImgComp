@@ -47,7 +47,7 @@ bins = 2^8; % TODO-> convert to Qbits in all functions?
     Coeff.Dde=Dde; 
     Coeff.Vde=Vde;
     Coeff.header.field = {'Ape','Hde','Dde','Vde'};
-    Coeff.header.type  = {'struct','cell','cell','cell'};
+    Coeff.header.type  = {'cell','cell','cell','cell'};
     PackedParam.Coeff = Coeff;
     PackedParam.Wpar  = Wpar; 
     filename = 'CompImg';
@@ -56,9 +56,7 @@ bins = 2^8; % TODO-> convert to Qbits in all functions?
 %% Performence Estimation
 
 %% Read  file
-    clear all; %TODO: remove
-    bins = 2^8; % TODO: remove
-    S = [64 64;64 64;128 128;256 256;512 512]; % TOOD remove
+%     clear all; %TODO: remove
     filename = 'CompImg'; 
     PackedParamR = ReadFile(filename); 
     WparR        = PackedParamR.Wpar;
@@ -77,6 +75,7 @@ bins = 2^8; % TODO-> convert to Qbits in all functions?
 [Apq,Hdq,Vdq,Ddq] = DiffDecodeCells(Apd,Hdd,Vdd,Ddd,level); 
 
 %% Quantization Decoding
+% bins  = % TODO (move write and read from file)
 [Ap,Hd,Vd,Dd] = QuantizeDecodeCells(Apq,Hdq,Vdq,Ddq,level,bins);
 
 %% Wavelet Reconstruction

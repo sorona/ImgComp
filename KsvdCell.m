@@ -14,12 +14,18 @@ params2d.basedict{2} = odctdict(sqrt(Patch_size),ceil(sqrt(Base_Dict_length))); 
 
 
 % for the i-th dimension
-params2d.Edata = 150;                       % 'Tdata'/'Edata' sparse-coding target                                                                                    
-params2d.Tdict = 50;                        % sparsity of each trained atom
-params2d.iternum = 10;                       % number of training iterations
+params2d.Edata = 130;                       % 'Tdata'/'Edata' sparse-coding target                                                                                    
+params2d.Tdict = 10;                        % sparsity of each trained atom
+params2d.iternum = 15;                       % number of training iterations
 
  close all;
 [A,Gamma,~,~] = ksvds(params2d);
+if(max(isnan(full(A(:))))) 
+    error('KSVD A output NaN for some indicies');
+end
+if(max(isnan(full(Gamma(:)))))
+    error('KSVD Gamma output NaN for some indicies');
+end
 % TODO: check then remove
 % figure();
 %  imhist(full(A)) %for sphit comression we need source transform

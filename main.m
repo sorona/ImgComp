@@ -1,14 +1,16 @@
 clear all;close all; clc;
-
 %% get Image 
 Im= imread('lenna.gif');
+Im = zeros(size(Im));
+Im(100:200,100:200)=1;
+imshow(Im)
 
 %% Wavelet Transform
     level   = 3; 
     wavelet_cell = {'db4','sym8'};
     wavelet_num  = 1;
     wavelet_name = wavelet_cell{wavelet_num};
-    dwtmode('per') 
+    dwtmode('per','nodisp') 
 [C,S] = wavedec2(Im,level,wavelet_name);
     % Pack Wavelet param
     Wpar.level = level;

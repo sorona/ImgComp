@@ -66,9 +66,11 @@ if(length(counts2)>1)
 elseif(length(counts2)==1)
     Ecode2 = 0;
 end
-rate2 = (length(Ecode2)+length(nonZind)*16)/(8*length(seq));
-fprintf('arithcode test ver2 compression rate of GAMMA rough estimation for %d bits on Hdd2 %.3f\n',log2(bins),rate2);
 
+if((length(counts2))>0)
+    rate2 = (length(Ecode2)+length(nonZind)*16)/(8*length(seq));
+    fprintf('arithcode test ver2 compression rate of GAMMA rough estimation for %d bits on Hdd2 %.3f\n',log2(bins),rate2);
+end
 
 %% decode
 Diffr = zeros(1,len);

@@ -1,29 +1,37 @@
 clear all;close all; clc;
 %% get Image 
 Im= imread('lenna.gif');
-Im = zeros(size(Im));
-Im(100:200,100:200)=1;
-imshow(Im)
+ImSize = dir('lenna.gif');
+ImSize = ImSize.bytes;
 
+% Im = zeros(size(Im));
+% Im(100:200,100:200)=1;
+figure();imshow(Im)
+   
 %% Wavelet Transform
-    level   = 3; 
-    wavelet_cell = {'db4','sym8'};
-    wavelet_num  = 1;
-    wavelet_name = wavelet_cell{wavelet_num};
-    dwtmode('per','nodisp') 
-[C,S] = wavedec2(Im,level,wavelet_name);
-    % Pack Wavelet param
-    Wpar.level = level;
-    Wpar.wavelet_num = wavelet_num;
-    Wpar.header.field = {'level','wavelet_num'};
-    Wpar.header.type  = {'uint8','uint8'};
-% figure(); showwave2( C,S,level,wavelet_name )
-[Ap,H,V,D] = getCoefCel( C,S,level,wavelet_name);
+    % fixed param
+    Wpar.wavelet = wavelet_name();
+    dwtmode('per','nodisp')  
+    % send param
+    Wpar.level = 3;
+    Wpar.S = [];    
+    Wpar.header.field = {'S','level'};
+    Wpar.header.type  = {'uint16','uint8'};
+    % encode
+    [Ap,H,V,D] = WaveletEncode(Im,Wpar);
+ % Verfication and Test   
+    wavelet_test(Im,Wpar);
 
-%% S-KSVD 
-Patch_size = 64;
-[Hd,Vd,Dd] = KsvdDecomposeCells(H,V,D,level,Patch_size); % 'Ap' is kept as is
+%% S-KSVD
+    % fixed param
+    Patch_size = 64;
+    Kpar.Edata = 1;
+    % send param
+    [Hd,Vd,Dd] = KsvdDecomposeCells(H,V,D,Wpar,Kpar,Patch_size); % 'Ap' is kept as is
 % Verefication and test
+%   ksvd_experiment()
+    ksvd_test(H,V,D,Wpar,Kpar,Patch_size);
+%%      
     save('HdSamp.mat','Hd');
     quantization_test('HdSamp.mat');
 %% Quantization encoding
@@ -81,16 +89,15 @@ bins = 2^8; % TODO-> convert to Qbits in all functions?
 %% Quantization Decoding
 [Ap,Hd,Vd,Dd] = QuantizeDecodeCells(Apq,Hdq,Vdq,Ddq,level,bins);
 
-%% Wavelet Reconstruction
- 
-Arec = Ap;
-[Hrec,Vrec,Drec] = sparseToCoef(Hd,Vd,Dd,level);
+%% KSVD Decoding
 
-C_r = getWaveletStream(Arec,Hrec,Vrec,Drec);
-wavelet_cell = {'db4','sym8'};
-wavelet_name = wavelet_cell{wavelet_num};
-Im_rec = waverec2(C_r,S,wavelet_name);
-figure();imshow(Im_rec,[]);
+%% Wavelet Reconstruction
+    % fixed param
+    Wpar.wavelet = wavelet_name();
+    dwtmode('per','nodisp')  
+    % decode
+    Im_rec = WaveletDecode(Ap,Hd,Vd,Dd,Wpar);
+    figure();imshow(Im_rec,[]);
 
 
 

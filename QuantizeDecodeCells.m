@@ -1,4 +1,6 @@
-function [Ap,Hd,Vd,Dd] = QuantizeDecodeCells(Apq,Hdq,Vdq,Ddq,level,bins)
+function [Ap,Hd,Vd,Dd] = QuantizeDecodeCells(Apq,Hdq,Vdq,Ddq,Wpar,Qpar)
+    bins  = Qpar.bins;
+    level = Wpar.level;
     Ap = QuantizeDecodeApq(Apq,bins); % TODO: implement quantize Ap 
     Hd = cell(1,level);
     Vd = cell(1,level);

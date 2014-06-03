@@ -9,6 +9,6 @@ for i = 1:Wpar.level
     if(err>10^-3)
         error('ERR ksvd test failed');
     end
-    fprintf('******Quantization Test pass\n******')
+    fprintf('******KSVD Test pass\n******')
 end
 end

@@ -9,35 +9,19 @@ function quantization_test(Ap,Hd,Vd,Dd,Wpar,Qpar)
         if(err>thresh); error('ERR ksvd test failed');end
     for i = 1:Wpar.level
         figure();
-        suptitle(sprintf('Quatization Test Results level %d',i))
         m = 2;n = 3;
         AA  = {'Hd{%d}.A' ,'Vd{%d}.A' ,'Dd{%d}.A'};
         AR  = {'HdR{%d}.A','VdR{%d}.A','DdR{%d}.A'};
         D   = {'H','V','D'};
         for j=1:3  
-            A = sprintf(AA{j},i); eval(sprintf('A = %s;',A))
-            R = sprintf(AR{j},i); eval(sprintf('R = %s;',R))
+            A = sprintf(AA{j},i);
+            R = sprintf(AR{j},i);
             err = norm(A-R,'fro')/numel(A);
             subplot(m,n,j);plot(A(:),'b');hold on;
-                           plot(A(:)-R(:),'r'); title(sprintf('Quantization Err=%e %s level %d',err,D{j},i));
-                           legend('Sigl','ERR');
+                           plot(A(:)-R(:),'r'); title(sprintf('Quantization Err %s level %d',D{j},i));
             if(err>thresh); error('ERR ksvd test failed');end
         end
-        
-        
-        AA  = {'Hd{%d}.GAMMA' ,'Vd{%d}.GAMMA' ,'Dd{%d}.GAMMA'};
-        AR  = {'HdR{%d}.GAMMA','VdR{%d}.GAMMA','DdR{%d}.GAMMA'};
-        D   = {'H','V','D'};
-        for j=1:3  
-            A = sprintf(AA{j},i); eval(sprintf('A = %s;',A))
-            R = sprintf(AR{j},i); eval(sprintf('R = %s;',R))
-            err = norm(A-R,'fro')/numel(A);
-            subplot(m,n,j+3);plot(A(:),'b');hold on;
-                           plot(A(:)-R(:),'r'); title(sprintf('Quantization Err=%e %s level %d',err,D{j},i));
-                           legend('Sigl','ERR');
-            if(err>thresh); error('ERR ksvd test failed');end
-        end
-        
+               
 %         err = norm(Vd{i}.A-VdR{i}.A,'fro')/numel(Vd{i}.A,'fro');
 %             subplot(m,n,2);stem(Vd{i}.A(:));hold on;stem(Hd{i}.A(:)-HdR{i}.A(:),'r');
 %                 title(sprintf('Quntization Err Hd{%s}.A',i));

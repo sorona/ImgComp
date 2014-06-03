@@ -1,4 +1,5 @@
 function ksvd_test(H,V,D,Wpar,Kpar)
+ fprintf('******KSVD Test begins******\n');
 [Hd,Vd,Dd,KparRe] = KsvdDecomposeCells(H,V,D,Wpar,Kpar);
 [H_re,V_re,D_re]  = sparseToCoef(Hd,Vd,Dd,Wpar,KparRe);
 
@@ -9,6 +10,6 @@ for i = 1:Wpar.level
     if(err>10^-3)
         error('ERR ksvd test failed');
     end
-    fprintf('******KSVD Test pass\n******')
+    fprintf('******KSVD Test pass******\n');
 end
 end

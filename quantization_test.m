@@ -51,10 +51,9 @@ function quantization_test(Ap,Hd,Vd,Dd,Wpar,Qpar)
             if(err>thresh); error('ERR ksvd test failed');end
         err = norm(Dd{i}.GAMMA-DdR{i}.GAMMA,'fro')/numel(Dd{i}.GAMMA,'fro');
             if(err>thresh); error('ERR ksvd test failed');end
-
-        %TODO add bins depended err estimations mean and max
-        fprintf('level %d max relative err TODO sperate GAMMA A, more informative %.3f\n',i,err);
     end
+            %TODO add bins depended err estimations mean and max
+        fprintf('max relative err TODO sperate GAMMA A, more informative ERR should be bounded %.3f\n');
     fprintf('******Quantization Test pass\n******')
 end
     

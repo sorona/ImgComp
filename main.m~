@@ -38,6 +38,8 @@ figure();imshow(Im);title('Original Image')
 % fixed param
     Qpar.bins = 2^8;
 % send param
+    % sepcific pararms send with each cell TODO: consider gathering outside
+    % for optimzations
 [Apq,Hdq,Vdq,Ddq] = QuantizeCells(Ap,Hd,Vd,Dd,Wpar,Qpar);
 % Verefication and test
     %TODO: quantization of large gamma may casue problems becasue dynamic
@@ -45,12 +47,12 @@ figure();imshow(Im);title('Original Image')
 %     save('HdSamp.mat','Hd');
 %     quantization_experiment('HdSamp.mat');
     quantization_test(Ap,Hd,Vd,Dd,Wpar,Qpar);
-
-    save('HdqSamp.mat','Hdq');
-    diff_test('HdqSamp.mat');
 %% Difference Encoding 
 [Apd,Hdd,Vdd,Ddd] = DiffCodeCells(Apq,Hdq,Vdq,Ddq,level); 
 % Verefication and test
+    save('HdqSamp.mat','Hdq');
+    diff_experiment('HdqSamp.mat');
+
     save('HddSamp.mat','Hdd');
     arithcode_test('HddSamp.mat',bins);
 %% Entropy Encoding

@@ -1,4 +1,5 @@
-function [Apd,Hdd,Vdd,Ddd] = EntropyDecodeCells(Ape,Hde,Vde,Dde,level)
+function [Apd,Hdd,Vdd,Ddd] = EntropyDecodeCells(Ape,Hde,Vde,Dde,Wpar)
+    level = Wpar.level;
     Apd = EntropyDecodeApe(Ape); % TODO: implement diff Ap 
     Hdd = cell(1,level);
     Vdd = cell(1,level);

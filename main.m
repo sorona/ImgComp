@@ -28,7 +28,7 @@ figure();imshow(Im);title('Original Image')
     Kpar.iternum = 1;
     Kpar.plots   = 1;
     % send param
-    Kpar.dictLen=[];
+    Kpar.dictLen=[]; 
     Kpar.patchSize=[];
     [Hd,Vd,Dd,Kpar] = KsvdDecomposeCells(H,V,D,Wpar,Kpar); % 'Ap' is kept as is
 % Verefication and test
@@ -53,18 +53,17 @@ figure();imshow(Im);title('Original Image')
     save('HdqSamp.mat','Hdq');
     diff_experiment('HdqSamp.mat');
     diff_test(Apq,Hdq,Vdq,Ddq,Wpar); 
-    
- %%   
-    
-    save('HddSamp.mat','Hdd');
-    arithcode_test('HddSamp.mat',bins);
 %% Entropy Encoding
-[Ape,Hde,Vde,Dde] = EntropyEncodeCells(Apd,Hdd,Vdd,Ddd,level); 
+[Ape,Hde,Vde,Dde] = EntropyEncodeCells(Apd,Hdd,Vdd,Ddd,Wpar); 
 % Verefication and test
-    save('HdeSamp.mat','Hde','Wpar');
+    save('HddSamp.mat','Hdd');
+    arithcode_experiment('HddSamp.mat',Qpar.bins);
+    arithcode_test(Apd,Hdd,Vdd,Ddd,Wpar);
+%%
+save('HdeSamp.mat','Hde','Wpar');
      filewrite_test('HdeSamp.mat');    
 %% Write file
-
+    
     Coeff.Ape=Ape;
     Coeff.Hde=Hde;
     Coeff.Dde=Dde; 

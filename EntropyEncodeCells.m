@@ -1,4 +1,5 @@
-function [Ape,Hde,Vde,Dde] = EntropyEncodeCells(Apd,Hdd,Vdd,Ddd,level)
+function [Ape,Hde,Vde,Dde] = EntropyEncodeCells(Apd,Hdd,Vdd,Ddd,Wpar)
+    level = Wpar.level;
     Ape = EntropyEncodeApd(Apd); % TODO: implement entroy encode Ap, do test to check if needed ??
     Hde = cell(1,level);
     Vde = cell(1,level);

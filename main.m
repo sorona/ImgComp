@@ -6,7 +6,7 @@ ImSize = ImSize.bytes;
 
 % Im = zeros(size(Im));
 % Im(100:200,100:200)=1;
-figure();imshow(Im)
+figure();imshow(Im);title('Original Image')
    
 %% Wavelet Transform
     % fixed param
@@ -18,26 +18,32 @@ figure();imshow(Im)
     Wpar.header.field = {'S','level'};
     Wpar.header.type  = {'uint16','uint8'};
     % encode
-    [Ap,H,V,D] = WaveletEncode(Im,Wpar);
+    [Ap,H,V,D,Wpar] = WaveletEncode(Im,Wpar);
  % Verfication and Test   
     wavelet_test(Im,Wpar);
 
 %% S-KSVD
     % fixed param
-    Patch_size = 64;
-    Kpar.Edata = 1;
+    Kpar.R       = 2; % redundancy of dictionary
+    Kpar.iternum = 1;
+    Kpar.plots   = 0;
     % send param
-    [Hd,Vd,Dd] = KsvdDecomposeCells(H,V,D,Wpar,Kpar,Patch_size); % 'Ap' is kept as is
+    Kpar.dictLen=[];
+    Kpar.patchSize=[];
+    [Hd,Vd,Dd,Kpar] = KsvdDecomposeCells(H,V,D,Wpar,Kpar); % 'Ap' is kept as is
 % Verefication and test
-%   ksvd_experiment()
-    ksvd_test(H,V,D,Wpar,Kpar,Patch_size);
-%%      
-    save('HdSamp.mat','Hd');
-    quantization_test('HdSamp.mat');
+%       ksvd_experiment()
+%       ksvd_test(H,V,D,Wpar,Kpar);
 %% Quantization encoding
-bins = 2^8; % TODO-> convert to Qbits in all functions?
-[Apq,Hdq,Vdq,Ddq] = QuantizeCells(Ap,Hd,Vd,Dd,level,bins);
-% Verefication and test    
+% fixed param
+    Qpar.bins = 2^8;
+% send param
+[Apq,Hdq,Vdq,Ddq] = QuantizeCells(Ap,Hd,Vd,Dd,Wpar,Qpar);
+%% Verefication and test
+    save('HdSamp.mat','Hd');
+    quantization_experiment('HdSamp.mat');
+    quantization_test();
+%
     save('HdqSamp.mat','Hdq');
     diff_test('HdqSamp.mat');
 %% Difference Encoding

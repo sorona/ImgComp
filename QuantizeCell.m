@@ -1,5 +1,5 @@
-function [ A, GAMMA ] = QuantizeCell( C,bins )
-    
+function [CRe] = QuantizeCell(C,Qpar)
+    bins   = Qpar.bins;
     % Quantize encode GAMMA
     OriginalSize = size(C.GAMMA); 
     GAMMAv = Gamma2vec(C.GAMMA);
@@ -40,5 +40,7 @@ function [ A, GAMMA ] = QuantizeCell( C,bins )
     A.Qindex         = index;
     A.Qpar           = Qpar;
     
+    CRe.A = A;
+    CRe.GAMMA =GAMMA;
 end
 

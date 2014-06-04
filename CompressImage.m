@@ -1,8 +1,8 @@
 function [ PSNR,BPP ] = CompressImage( imgFileName,outFileName,Cpar )
 %% get Image 
 Im= imread(imgFileName);
-ImSize = dir(imgFileName);
-ImSize = ImSize.bytes;
+% ImSize = dir(imgFileName);
+ImSize = numel(Im);%TODO:review
 % Im = zeros(size(Im));
 % Im(100:200,100:200)=1;
 % Im = Im+randn(size(Im))*10e-4;
@@ -21,13 +21,12 @@ Imfig = figure();subplot(1,2,1);imshow(Im);title('Original Image')
     Wpar.header.type  = {'uint16','uint8'};
     % encode
     [Ap,H,V,D,Wpar] = WaveletEncode(Im,Wpar);
-    Wpar.S = Wpar.S(:,1); % TODO:genralize to non square images
  % Verfication and Test   
 %     wavelet_test(Im,Wpar);
 
 %% S-KSVD
     % fixed param
-    Kpar.R       = 4; % redundancy of dictionary
+    Kpar.R       =  Cpar.Redun; % redundancy of dictionary
 %     par.perTdata = 0.2;
     Kpar.perTdict = Cpar.perTdict;
     Kpar.perEdata = Cpar.perEdata;
@@ -72,10 +71,9 @@ Imfig = figure();subplot(1,2,1);imshow(Im);title('Original Image')
 [A,H,V,D] = EntropyDecodeCells(Ape,Hde,Vde,Dde,Wpar); 
 [A,H,V,D] = DiffDecodeCells(A,H,V,D,Wpar); 
 [A,H,V,D] = QuantizeDecodeCells(A,H,V,D,Wpar,Qpar);
-    Wpar.S = [Wpar.S(:) Wpar.S(:)];
-[H,V,D]   = sparseToCoef(H,V,D,Wpar,Kpar);% TODO:genralize to non square images
+[H,V,D]   = sparseToCoef(H,V,D,Wpar,Kpar);
 Im_rec    = WaveletDecode(A,H,V,D,Wpar);
-    Wpar.S = Wpar.S(:,1); % TODO:genralize to non square images
+    Wpar.S = Wpar.S(:); % TODO:genralize to non square images
     
     Im   = double(Im);
     MSE  = (norm(Im-Im_rec,'fro'))^2/numel(Im);
@@ -107,8 +105,14 @@ figure(Imfig);subplot(1,2,2);imshow(Im_rec,[]);title('Reconstructed Image');
     
 %% Performence Estimation
 
+
 BPP = file_size/ImSize;
-suptitle(sprintf('Copression Results: PSNR=%.2f BBP=%.2f',PSNR,BPP));   
+suptitle(sprintf('Copression Results: PSNR=%.2f BPP=%.2f\n waveLevel=%d Redundancy=%d, perDict=%.4f, perEdata=%.4f bins=%d'...
+                  ,PSNR,BPP,Cpar.waveletLevel...
+                           ,Cpar.Redun...
+                           ,Cpar.perTdict...
+                           ,Cpar.perEdata...
+                           ,Cpar.bins));   
 
 end
 

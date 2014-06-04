@@ -77,8 +77,13 @@ function [ A,Gamma ] = run_ksvd(par)
     params2d.iternum = iternum;              
     
     [A,Gamma,err] = ksvds(params2d);
-    
-    fprintf('info:\nImgSize=%dx%d ,PatchSzize=%d ,Redudancy=%.3f\n',size(C),Ps,dictLen/Ps);
+    % print info
+    fprintf('info:\n %s ImgSize=%dx%d ,PatchSize=%d ,Patches=%d,Redudancy=%.3f\n'...
+                       ,par.name...
+                       ,size(C)...
+                       ,Ps...
+                       ,numel(C)/Ps...
+                       ,dictLen/Ps);
     if(err_info)
         fprintf(err_info);
     end
@@ -109,13 +114,16 @@ function [ A,Gamma ] = run_ksvd(par)
         fprintf('mean patch ERR=%e\n',ERR);
     end
     fprintf('Coeff To send=%d nnz=%d\n',numel(A)+numel(Gamma),nnz(A)+nnz(Gamma));
-
+    
+    % pixel mean err
+    PRMSE = norm(X-Xr,'fro')/numel(X);
+    
      if(par.plots)
          mm = 4; nn=3;
          figure('units','normalized','outerposition',[0 0 1 1])
          subplot(mm,nn,1);imshow(X,[]);title(sprintf('in2col of Img (size:%d:%d)',size(X)));
          subplot(mm,nn,2);imshow(C,[]);title(sprintf('Original Img (size:%d:%d)',size(C)));
-         subplot(mm,nn,3);imshow(ImRe,[]);title('Reconstructed Img')
+         subplot(mm,nn,3);imshow(ImRe,[]);title(sprintf('Reconstructed Img PRMSE=%.4f',PRMSE))
 
          subplot(mm,nn,4);imshow(B); title(sprintf('Base Dictionary (size:%dx%d)',size(B))); 
          subplot(mm,nn,5);spy((A));title(sprintf('spy for A (size:%dx%d) spar=%.3f',size(A),nnz(A)/numel(A)))
@@ -131,6 +139,6 @@ function [ A,Gamma ] = run_ksvd(par)
              else
                     ylabel('mean Atoms');
              end
-         suptitle('KSVD experiment results');
+         suptitle(sprintf('KSVD run results %s',par.name));
      end
 end

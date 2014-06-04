@@ -1,9 +1,13 @@
 function PackedParam = ReadFile(filename)
     fid = fopen(filename,'r');
     
-    Wpar.header.field = {'level','wavelet_num'};
-    Wpar.header.type  = {'uint8','uint8'};
+    Wpar.header.field = {'S','level'};
+    Wpar.header.type  = {'uint16','uint8'};
     Wpar = read_structfromfile(fid,Wpar);
+    
+    Kpar.header.field = {'dictLen','patchSize'};
+    Kpar.header.type  = {'uint16','uint8'};
+    Kpar = read_structfromfile(fid,Kpar);
     
     Qpar.header.field = {'OriginalSize','DC','Max'};
     Qpar.header.type  = {'uint16','double','double'};
@@ -35,11 +39,12 @@ function PackedParam = ReadFile(filename)
     
     Coeff = read_structfromfile(fid,Coeff);
     PackedParam.Wpar = Wpar;
+    PackedParam.Kpar = Kpar;
     PackedParam.Coeff = Coeff;
 end
 
 %% read complex struct
-function SparRe = read_structfromfile(fid,Spar)
+ function SparRe = read_structfromfile(fid,Spar)
     field_no = length(Spar.header.field);
     field = Spar.header.field;  
     type  = Spar.header.type;

@@ -5,7 +5,6 @@ function [Hrec,Vrec,Drec] = sparseToCoef(H,V,D,Wpar,Kpar)
     Drec  = cell(1,level);
     
     for i = 1:level    
-  
          dictLen   = Kpar.dictLen(i);
          patchSize = Kpar.patchSize(i);
          m = sqrt(patchSize);

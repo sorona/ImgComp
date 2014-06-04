@@ -1,10 +1,12 @@
 function file_size = WriteFile(PackedParam,filename)
     % unpack param
     Wpar  = PackedParam.Wpar;
+    Kpar  = PackedParam.Kpar;
     Coeff = PackedParam.Coeff;
     
     fid    = fopen(filename,'w');
     write_struct2file(fid,Wpar);
+    write_struct2file(fid,Kpar);
     write_struct2file(fid,Coeff);
     file_size = ftell(fid);
     fclose(fid);

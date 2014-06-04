@@ -24,9 +24,9 @@ function [ A,Gamma,parRe ] = ksvd_pre_run(C,par)
     ind = find(dictOption<maxDictLen,1,'last');  
     par.dictLen   = dictOption(ind);
 
-    par.perTdict = 0.05; % TODO review we should somehow balance or find optimum
-%     par.perTdata = 0.1;
-      par.perEdata = 0.001;
+%     par.perTdict = 0.8; % TODO review we should somehow balance or find optimum
+%     par.perTdata = 0.2;
+%       par.perEdata = 0.1;
 %     par.Tdata    = 3;
 %     par.Edata =4;
     [ A,Gamma ] = run_ksvd(par);
@@ -99,7 +99,7 @@ function [ A,Gamma ] = run_ksvd(par)
 
     if(isfield(params2d,'Tdata'))
         RMSE = sqrt( (norm(X-Xr,'fro'))^2 / numel(X) );
-        fprintf('Tdata=%d of %d patch of %d GAMMA len\nreq spar=%.3f RMSE=%e per pixel\n',params2d.Tdata,m*n,size(Gamma,1),perTdata,RMSE);
+        fprintf('Tdata=%d of %d patch of %d GAMMA len\nreq spar=%.3f RMSE=%e per pixel\n',params2d.Tdata,m*n,size(Gamma,1),params2d.Tdata/m*n,RMSE);
     else
         ERR = 0;
         for j=1:size(X,2)

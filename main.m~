@@ -8,13 +8,13 @@ outFileName = 'barbaraComp';
 Cpar.waveletPlot  = 0;
 Cpar.waveletLevel = 5;
 % KSVD param
-Cpar.Redun     = 2;
+Cpar.Redun     = 4;
 Cpar.ksvdPlots = 0;
-Cpar.perTdict  = 0.3;
+Cpar.perTdict  = 0.1;
 Cpar.perEdata  = 0.11;
 Cpar.iternum   = 15;
 % Quantization param
-Cpar.bins = 2^6;
+Cpar.bins = 2^5;
 % Arithcode param
 Cpar.arith_test = 0;
 % file statistics

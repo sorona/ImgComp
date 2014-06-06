@@ -65,11 +65,8 @@ Imfig = figure();subplot(1,2,1);imshow(Im);title('Original Image')
 % Verefication and test
 %     save('HddSamp.mat','Hdd');
 %     arithcode_experiment('HddSamp.mat',Qpar.bins);
-    if(isfield(Cpar,'arith_test'))
-        if(Cpar.arith_test)
-            arithcode_test(Apd,Hdd,Vdd,Ddd,Wpar,Qpar);
-        end
-    end
+    arithcode_test(Apd,Hdd,Vdd,Ddd,Wpar,Qpar);
+  
 %% PSNR SSIM Eval
 [A,H,V,D] = EntropyDecodeCells(Ape,Hde,Vde,Dde,Wpar); 
 [A,H,V,D] = DiffDecodeCells(A,H,V,D,Wpar); 
@@ -113,7 +110,7 @@ figure(Imfig);subplot(1,2,2);imshow(Im_rec,[]);title('Reconstructed Image');
         figure();pie(fileStats,labels);     
     end
     
-% dbstop in filewrite_test
+
 filewrite_test(PackedParam,filename);   
 % filewrite_experiment();
     

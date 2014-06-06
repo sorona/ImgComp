@@ -6,7 +6,7 @@ outFileName = 'barbaraComp';
 
 % Wavelet param
 Cpar.waveletPlot  = 0;
-Cpar.waveletLevel = 5;
+Cpar.waveletLevel = 6;
 % KSVD param
 Cpar.Redun     = 2;
 Cpar.ksvdPlots = 0;

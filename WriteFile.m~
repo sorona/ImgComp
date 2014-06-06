@@ -1,4 +1,4 @@
-function [file_size,wSize] = WriteFile(PackedParam,filename)
+function file_size = WriteFile(PackedParam,filename)
     % unpack param
     
     wSize.hedSize = 0;
@@ -9,8 +9,7 @@ function [file_size,wSize] = WriteFile(PackedParam,filename)
     if(isfield(PackedParam,'test'))
             fid    = fopen(filename,'w');
             wSize = write_struct2file(fid,PackedParam ,wSize);
-            wSize.parSize = computeParSize(wSize);
-            wSize.tot     = wSize.parSize+wSize.hedSize+wSize.strSize;
+                wSize.parSize = computeParSize(wSize);
             file_size = ftell(fid);
             fclose(fid);
             return;
@@ -26,7 +25,7 @@ function [file_size,wSize] = WriteFile(PackedParam,filename)
     wSize = write_struct2file(fid,Coeff,wSize);
     
     wSize.parSize = computeParSize(wSize);
-    wSize.tot     = wSize.parSize+wSize.hedSize+wSize.strSize;
+    
     file_size = ftell(fid);
     fclose(fid);
 end
@@ -36,23 +35,23 @@ function parSize = computeParSize(wSize)
     for i=1:length(wSize.parSizeLen)
         switch wSize.parSizeName{i}
             case 'double'
-                parSize = parSize +8*wSize.parSizeLen{i};
+                parSize = parSize +8;
             case 'int8'
-                parSize = parSize +1*wSize.parSizeLen{i};
+                parSize = parSize +1;
             case 'int16'	
-                parSize = parSize +2*wSize.parSizeLen{i};
+                parSize = parSize +2;
             case 'int32'	
-                parSize = parSize +4*wSize.parSizeLen{i};
+                parSize = parSize +4;
             case 'int64'	
-                parSize = parSize +8*wSize.parSizeLen{i};
+                parSize = parSize +8;
             case 'uint8'	
-                parSize = parSize +1*wSize.parSizeLen{i};
+                parSize = parSize +1;
             case 'uint16'	
-                parSize = parSize +2*wSize.parSizeLen{i};
+                parSize = parSize +2;
             case 'uint32'
-                parSize = parSize +4*wSize.parSizeLen{i};
+                parSize = parSize +4;	
             case 'uint64'
-                parSize = parSize +8*wSize.parSizeLen{i};
+                parSize = parSize +8;
             otherwise
                 error('ERR type not supported')
         end
@@ -117,14 +116,13 @@ function [strSize] = write_stream2file (stream,fid)
     streamU8 = reshape(stream,[],8);
     streamU8 = bi2de(streamU8);
     len      = length(streamU8);
-    fwrite(fid,len,'uint32'); %TODO Packedbits protocol style
-    strSize = 4;
+    fwrite(fid,len,'uint32');
         if(len>=2^32)
              error('ERR write_stream2file "len" overflows uint32'); 
         end
     fwrite(fid,pad,     'uint8' );
-    strSize = strSize + 1;
     fwrite(fid,streamU8,'uint8' );
-    strSize = strSize + length(stream)/8;   
+    strSize = length(stream)/8;
+    strSize = strSize + 1;
 end
 

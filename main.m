@@ -1,20 +1,20 @@
 % main.m
 %% Single Test
-close all,clear all,clc;
+close all;clear all;clc;
 imgFileName = 'barbara.gif';
 outFileName = 'barbaraComp';
 
 % Wavelet param
 Cpar.waveletPlot  = 0;
-Cpar.waveletLevel = 5;
+Cpar.waveletLevel = 3;
 % KSVD param
 Cpar.Redun     = 2;
 Cpar.ksvdPlots = 0;
-Cpar.perTdict  = 0.5;
-Cpar.perEdata  = 0.08;
-Cpar.iternum   = 15;
+Cpar.perTdict  = 0.01;
+Cpar.perEdata  = 0.11;
+Cpar.iternum   = 2;
 % Quantization param
-Cpar.bins = 2^6;
+Cpar.bins = 2^4;
 % file statistics
 Cpar.fileStatsPlot = 1; 
 [ PSNR,BPP ] = CompressImage( imgFileName,outFileName,Cpar );

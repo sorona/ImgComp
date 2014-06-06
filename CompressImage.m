@@ -27,7 +27,7 @@ Imfig = figure();subplot(1,2,1);imshow(Im);title('Original Image')
 %% S-KSVD
     % fixed param
     Kpar.R       =  Cpar.Redun; % redundancy of dictionary
-%     par.perTdata = 0.2;
+%     Kpar.perTdata = 0.4;
     Kpar.perTdict = Cpar.perTdict;
     Kpar.perEdata = Cpar.perEdata;
     Kpar.iternum =  Cpar.iternum;
@@ -65,7 +65,7 @@ Imfig = figure();subplot(1,2,1);imshow(Im);title('Original Image')
 % Verefication and test
 %     save('HddSamp.mat','Hdd');
 %     arithcode_experiment('HddSamp.mat',Qpar.bins);
-%     arithcode_test(Apd,Hdd,Vdd,Ddd,Wpar);
+    arithcode_test(Apd,Hdd,Vdd,Ddd,Wpar,Qpar);
   
 %% PSNR SSIM Eval
 [A,H,V,D] = EntropyDecodeCells(Ape,Hde,Vde,Dde,Wpar); 
@@ -112,7 +112,7 @@ figure(Imfig);subplot(1,2,2);imshow(Im_rec,[]);title('Reconstructed Image');
     
 % save('HdeSamp.mat','Hde','Wpar');
 %      filewrite_test('HdeSamp.mat');   
-filewrite_experiment();
+% filewrite_experiment();
     
 %% Performence Estimation
 

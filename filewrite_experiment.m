@@ -9,7 +9,7 @@ function filewrite_experiment()
     Spar.header.type    ={'uint16','uint32','stream'};
     Spar.test = 1;
     [file_size,wSize] = WriteFile(Spar,'test_write');
-    fprintf('calcuate file size=%d, eval=%d\n,',file_size,wSize.tot)
+    fprintf('calcuate file size=%d, eval=%d\n',file_size,wSize.tot)
     
     %%
     

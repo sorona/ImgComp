@@ -8,11 +8,12 @@ outFileName = 'barbaraComp';
 Cpar.waveletPlot  = 0;
 Cpar.waveletLevel = 5;
 % KSVD param
-Cpar.Redun     = 2;
+Cpar.Redun     = 4;
 Cpar.ksvdPlots = 0;
-Cpar.perTdict  = 0.3;
-Cpar.perEdata  = 0.11;
-Cpar.iternum   = 15;
+Cpar.perTdict  = 0.5;
+Cpar.perTdata  = 0.5;%TODO: make KSVD prints right for this one
+% Cpar.perEdata  = 0.11;
+Cpar.iternum   = 3;
 % Quantization param
 Cpar.bins = 2^6;
 % Arithcode param

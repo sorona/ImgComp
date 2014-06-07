@@ -27,9 +27,13 @@ Imfig = figure();subplot(1,2,1);imshow(Im);title('Original Image')
 %% S-KSVD
     % fixed param
     Kpar.R       =  Cpar.Redun; % redundancy of dictionary
-%     Kpar.perTdata = 0.4;
+    if(isfield(Cpar,'perTdata'))
+        Kpar.perTdata = Cpar.perTdata;
+    else
+        Kpar.perEdata = Cpar.perEdata;
+    end
     Kpar.perTdict = Cpar.perTdict;
-    Kpar.perEdata = Cpar.perEdata;
+    
     Kpar.iternum =  Cpar.iternum;
     Kpar.plots   =  Cpar.ksvdPlots;
     % send param
@@ -127,7 +131,7 @@ suptitle(sprintf('Copression Results: PSNR=%.2f BPP=%.2f\n waveLevel=%d Redundan
                   ,PSNR,BPP,Cpar.waveletLevel...
                            ,Cpar.Redun...
                            ,Cpar.perTdict...
-                           ,Cpar.perEdata...
+                           ,Cpar.perTdata...
                            ,Cpar.bins));   
 
 end

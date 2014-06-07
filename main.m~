@@ -10,7 +10,7 @@ Cpar.waveletLevel = 6;
 % KSVD param
 Cpar.Redun     = 2;
 Cpar.ksvdPlots = 0;
-Cpar.perTdict  = 0.3;
+Cpar.perTdict  = 0.3; 
 Cpar.perEdata  = 0.11;
 Cpar.iternum   = 15;
 % Quantization param

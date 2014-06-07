@@ -59,14 +59,18 @@ Imfig = figure();subplot(1,2,1);imshow(Im);title('Original Image')
 % Verefication and test
 %     save('HdqSamp.mat','Hdq');
 %     diff_experiment('HdqSamp.mat');
-%     diff_test(Apq,Hdq,Vdq,Ddq,Wpar); 
+      diff_test(Apq,Hdq,Vdq,Ddq,Wpar); 
+      diff_plots(Apq,Hdq,Vdq,Ddq,Wpar);
 %% Entropy Encoding
 [Ape,Hde,Vde,Dde] = EntropyEncodeCells(Apd,Hdd,Vdd,Ddd,Wpar); 
 % Verefication and test
 %     save('HddSamp.mat','Hdd');
 %     arithcode_experiment('HddSamp.mat',Qpar.bins);
-    arithcode_test(Apd,Hdd,Vdd,Ddd,Wpar,Qpar);
-  
+    if(isfield(Cpar,'arith_test'))
+        if(Cpar.arith_test)
+            arithcode_test(Apd,Hdd,Vdd,Ddd,Wpar,Qpar);
+        end
+    end
 %% PSNR SSIM Eval
 [A,H,V,D] = EntropyDecodeCells(Ape,Hde,Vde,Dde,Wpar); 
 [A,H,V,D] = DiffDecodeCells(A,H,V,D,Wpar); 
@@ -110,7 +114,7 @@ figure(Imfig);subplot(1,2,2);imshow(Im_rec,[]);title('Reconstructed Image');
         figure();pie(fileStats,labels);     
     end
     
-
+% dbstop in filewrite_test
 filewrite_test(PackedParam,filename);   
 % filewrite_experiment();
     

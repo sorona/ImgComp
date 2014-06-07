@@ -59,7 +59,8 @@ Imfig = figure();subplot(1,2,1);imshow(Im);title('Original Image')
 % Verefication and test
 %     save('HdqSamp.mat','Hdq');
 %     diff_experiment('HdqSamp.mat');
-%     diff_test(Apq,Hdq,Vdq,Ddq,Wpar); 
+      diff_test(Apq,Hdq,Vdq,Ddq,Wpar); 
+      diff_plots(Apd,Hdd,Vdd,Ddd,Wpar,Qpar);
 %% Entropy Encoding
 [Ape,Hde,Vde,Dde] = EntropyEncodeCells(Apd,Hdd,Vdd,Ddd,Wpar); 
 % Verefication and test

@@ -26,4 +26,8 @@ function [Ecode,Epar] = arithencoCell(Diff)
     Epar.counts = counts;
     Epar.trans  = trans;
     Epar.len    = len;
+    
+    % TODO : add over flow check
+    Epar.header.field = {'counts','trans','len'}; % trans type is 2*bins
+    Epar.header.type  = {'uint32','int64','uint32'}; %TODO : try to reduce and check overflow 
 end

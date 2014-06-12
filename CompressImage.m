@@ -2,7 +2,7 @@ function [ PSNR,BPP ] = CompressImage( imgFileName,outFileName,Cpar )
 %% get Image 
 Im= imread(imgFileName);
 % ImSize = dir(imgFileName);
-ImSize = numel(Im);%TODO:review
+ImSize = numel(Im);%TODO:review BPP comparison to what
 % Im = zeros(size(Im));
 % Im(100:200,100:200)=1;
 % Im = Im+randn(size(Im))*10e-4;
@@ -64,7 +64,11 @@ Imfig = figure();subplot(1,2,1);imshow(Im);title('Original Image')
 %     save('HdqSamp.mat','Hdq');
 %     diff_experiment('HdqSamp.mat');
 %     diff_test(Apq,Hdq,Vdq,Ddq,Wpar); 
+if(isfield(Cpar,'diffPlots'))
+    if(Cpar.diffPlots)
       diff_plots(Apd,Hdd,Vdd,Ddd,Wpar,Qpar);
+    end
+end
 %% Entropy Encoding
 [Ape,Hde,Vde,Dde] = EntropyEncodeCells(Apd,Hdd,Vdd,Ddd,Wpar); 
 % Verefication and test
@@ -87,11 +91,11 @@ Im_rec    = WaveletDecode(A,H,V,D,Wpar);
     MSE  = (norm(Im-Im_rec,'fro'))^2/numel(Im);
     MAXI = 255;%TODO: review
     PSNR = 10*log10(MAXI^2/MSE);
-    
+
+    % TOOD: SSIM check here
 figure(Imfig);subplot(1,2,2);imshow(Im_rec,[]);title('Reconstructed Image');
 
-%% TODO: reconstruc here without file writing compute 
-%% PSNR SSIM check that after read is the same
+
 %% DO write test use isequal
 
 %% Write file
@@ -110,12 +114,14 @@ figure(Imfig);subplot(1,2,2);imshow(Im_rec,[]);title('Reconstructed Image');
     if(wSize.tot~=file_size)
         error('Error in estimating file size');
     end
-    if(Cpar.fileStatsPlot)
-        fileStats =[wSize.hedSize,wSize.parSize,wSize.strSize]; 
-        labels = {sprintf('Headers\n%.2f',wSize.hedSize/file_size)...
-                 ,sprintf('Param\n%.2f'  ,wSize.parSize/file_size)...
-                 ,sprintf('Stream\n%.2f' ,wSize.strSize/file_size)};
-        figure();pie(fileStats,labels);     
+    if(isfield(Cpar,'fileStatsPlot'))
+        if(Cpar.fileStatsPlot)
+            fileStats =[wSize.hedSize,wSize.parSize,wSize.strSize]; 
+            labels = {sprintf('Headers\n%.2f',wSize.hedSize/file_size)...
+                     ,sprintf('Param\n%.2f'  ,wSize.parSize/file_size)...
+                     ,sprintf('Stream\n%.2f' ,wSize.strSize/file_size)};
+            figure();pie(fileStats,labels);     
+        end
     end
     
 % dbstop in filewrite_test
@@ -131,7 +137,7 @@ suptitle(sprintf('Copression Results: PSNR=%.2f BPP=%.2f\n waveLevel=%d Redundan
                   ,PSNR,BPP,Cpar.waveletLevel...
                            ,Cpar.Redun...
                            ,Cpar.perTdict...
-                           ,Cpar.perTdata...
+                           ,Cpar.perEdata...
                            ,Cpar.bins));   
 
 end

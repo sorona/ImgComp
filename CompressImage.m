@@ -1,12 +1,12 @@
 function [ PSNR,BPP ] = CompressImage( imgFileName,outFileName,Cpar )
 %% get Image 
 Im= imread(imgFileName);
-% ImSize = dir(imgFileName);
-ImSize = numel(Im);%TODO:review BPP comparison to what
+% pixNum = dir(imgFileName);
+pixNum = numel(Im);%TODO:review BPP comparison to what
 % Im = zeros(size(Im));
 % Im(100:200,100:200)=1;
 % Im = Im+randn(size(Im))*10e-4;
-% ImSize = numel(Im)*8;
+% pixNum = numel(Im);
 Imfig = figure();subplot(1,2,1);imshow(Im);title('Original Image')
    
 %% Wavelet Transform
@@ -93,7 +93,7 @@ Im_rec    = WaveletDecode(A,H,V,D,Wpar);
     PSNR = 10*log10(MAXI^2/MSE);
 
     % TOOD: SSIM check here
-figure(Imfig);subplot(1,2,2);imshow(Im_rec,[]);title('Reconstructed Image');
+figure(Imfig);subplot(1,2,2);imshow(Im_rec,[0 255]);title('Reconstructed Image');
 
 
 %% DO write test use isequal
@@ -131,7 +131,7 @@ filewrite_test(PackedParam,filename);
 %% Performence Estimation
 
 
-BPP = file_size/ImSize;
+BPP = file_size/pixNum;
 figure(Imfig);
 suptitle(sprintf('Copression Results: PSNR=%.2f BPP=%.2f\n waveLevel=%d Redundancy=%d, perDict=%.4f, perEdata=%.4f bins=%d'...
                   ,PSNR,BPP,Cpar.waveletLevel...

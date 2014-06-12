@@ -11,8 +11,8 @@ function PackedParam = ReadFile(filename)
     
     Qpar.header.field = {'OriginalSize','DC','Max'};
     Qpar.header.type  = {'uint16','double','double'};
-    Epar.header.field = {'counts','trans','len'}; 
-    Epar.header.type  = {'uint32','int64','uint32'};
+    Epar.header.field = {'nzInd','counts','trans','len'}; 
+    Epar.header.type  = {'uint16','uint32','int64','uint32'};
     Dpar.header.field={'start_index'};
     Dpar.header.type ={'uint64'};
 

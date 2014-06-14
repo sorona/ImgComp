@@ -5,14 +5,22 @@ imgFileName = 'barbara.gif';
 outFileName = 'barbaraComp';
 
 % Wavelet param
-Cpar.waveletPlot  = 1;
-Cpar.waveletLevel = 7; % TODO: review moving 5->6 level bad results
+Cpar.waveletLevel = 6; % TODO: review moving 5->6 level bad results
+Cpar.waveletPlot  = 0;
+Cpar.waveTest     = 0;
+% Aprrox band param
+    % Quantization  
+    Cpar.ApBins = 2^8;
 % KSVD param
-Cpar.Redun     = 2;
-Cpar.perTdict  = 0.15;
+Cpar.perTdict      = 0.15;
+Cpar.iternum       = 3;
+Cpar.KparPrintInfo = 1;
+Cpar.Kparplots     = 0;
+Cpar.Kpargomp_test = 1;
 % Cpar.perTdata  = 0.5;%TODO: make KSVD prints right for this one
 Cpar.perEdata  = 0.3;
-Cpar.iternum   = 15;
+Cpar.trainPSNR      = 40;
+Cpar.iternum   = 1;
 Cpar.ksvdPlots = 0;
 % Quantization param
 Cpar.bins = 2^5;
@@ -22,6 +30,7 @@ Cpar.Diffplots = 0;
 Cpar.arith_test = 0;
 % file statistics
 Cpar.fileStatsPlot = 1;
+dbstop in CompressImage
 [ PSNR,BPP ] = CompressImage( imgFileName,outFileName,Cpar );
 
 % TODO PRIO 1:
@@ -35,9 +44,11 @@ Cpar.fileStatsPlot = 1;
 % 3. move omp to global omp
 % 4. KSVD par PSNR
 % 5. KSVD perTdict 0.15 
+% 6. grep PSNR in folder Review (maxi=? 255?)
 
 % TODO: PRIO 2
 % 1. improve info on ksvd
+% 1. add test and verification by option in main
 % 2. add report to pdf on run
 % 3. move to high res lenna/barabra
     

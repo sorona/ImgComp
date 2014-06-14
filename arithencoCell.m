@@ -35,8 +35,7 @@ function [Ecode,Epar] = arithencoCell(Diff)
     counts = counts(1:t-1);
     trans  = trans(1:t-1);
     len    = length(seq);
-    if(length(counts)>1) 
-        dbstop in arithenco
+    if(length(counts)>1)
         Ecode = arithenco(seq,counts);
     elseif(length(counts)==1)
         Ecode = 0;

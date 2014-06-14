@@ -1,5 +1,4 @@
 function [ Hd,Vd,Dd,KparRe] = KsvdDecomposeCells( H,V,D ,Wpar,Kpar)
-    
     level   = Wpar.level;
     Hd = cell(1,level);
     Vd = cell(1,level);

@@ -1,6 +1,6 @@
 function [Apd,Hdd,Vdd,Ddd] = DiffCodeCells(Apq,Hdq,Vdq,Ddq,Wpar)
     level = Wpar.level;
-    Apd = DiffCodeApq(Apq); 
+%     Apd = DiffCodeApq(Apq); 
     Hdd = cell(1,level);
     Vdd = cell(1,level);
     Ddd = cell(1,level);

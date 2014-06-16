@@ -53,15 +53,14 @@ Ape = EntropyEncodeApd(Apd);
 %       ksvd_test(H,V,D,Wpar,Kpar);
 %% OMP (obtain sparse representation)
     Kpar.gomp_test = Cpar.Kpargomp_test;
-    dbstop in OMPCells
     [GAMMA] = OMPcells(H,V,D,Dict,Wpar,Kpar);
 
 %% Quantizatie Dictionaries
 % consider quantize all for same codebook (values +-1)
 % fixed param
-    Qpar.bins = Cpar.bins;
+    Qpar.bins = Cpar.DictBins;
 % send param
-    DictQ = QuantizeDict(Dict,Wpar,Qpar);
+    Dict = QuantizeDict(Dict,Qpar);
     
 % [Apq,Hdq,Vdq,Ddq] = QuantizeCells(Ap,Hd,Vd,Dd,Wpar,Qpar);
 % Verefication and test
@@ -71,6 +70,14 @@ Ape = EntropyEncodeApd(Apd);
 %     quantization_experiment('HdSamp.mat');
 %     quantization_test(Ap,Hd,Vd,Dd,Wpar,Qpar);
 %% Quantizatie GAMMA
+    % consider quantizing every level together?
+    % fixed param
+    Qpar.bins = Cpar.GAMMABins;
+    GAMMA = QuantizeGAMMA(GAMMA,Qpar);
+
+%% Separate NZ indcies 
+    dbstop in SeprateIndGAMMA
+    GAMMA = SeprateIndGAMMA(GAMMA,Qpar);
 
 %% Difference Encoding 
 [Apd,Hdd,Vdd,Ddd] = DiffCodeCells(Apq,Hdq,Vdq,Ddq,Wpar); 

@@ -23,7 +23,8 @@ Cpar.trainPSNR      = 40;
 Cpar.iternum   = 1;
 Cpar.ksvdPlots = 0;
 % Quantization param
-Cpar.bins = 2^5;
+Cpar.DictBins  = 2^5;
+Cpar.GAMMABins = 2^5;
 % Diff param
 Cpar.Diffplots = 0;
 % Arithcode param

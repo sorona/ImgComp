@@ -1,8 +1,0 @@
-function DictQ = QuantizeDict(Dict,Qpar)
-    DictQ = cell(size(Dict));
-    for i=1:DictQ,2)
-        for j=1:3
-    
-        end
-    end
-end
